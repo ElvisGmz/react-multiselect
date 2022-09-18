@@ -5,7 +5,8 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    console.log(formData.getAll('select'));
+    // eslint-disable-next-line no-alert
+    alert(formData.getAll('select'));
   };
 
   const items = [
