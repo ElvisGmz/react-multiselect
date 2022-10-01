@@ -9,7 +9,8 @@ export default function Row({ data = null, disabled = false, onClick = () => {} 
       className={classNames('px-4 py-2 w-full bg-white hover:bg-blue-50 transition-all duration-300 ease-in-out text-left', {
         'pointer-events-none opacity-60': disabled,
       })}
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         onClick(data);
       }}
     >

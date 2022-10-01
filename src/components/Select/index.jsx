@@ -3,44 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 
 import Row from './Row';
-
-function SelectedItem({
-  name, data = null, onClick = () => {}, inputMode = false,
-}) {
-  return (
-    <>
-      <button
-        type="button"
-        className="group text-sm relative flex items-stretch whitespace-nowrap bg-green-200 rounded"
-        onClick={(e) => {
-          e.stopPropagation();
-          onClick(data);
-        }}
-      >
-        <span className="px-2 py-0.5">{data?.label}</span>
-        <span className="absolute opacity-0 group-hover:opacity-100 top-0 left-0 w-full h-full bg-red-400 flex justify-center items-center text-white rounded transition-opacity duration-300 ease-in-out">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-6 h-6 mx-2"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19.5 12h-15"
-            />
-          </svg>
-        </span>
-      </button>
-      {
-        inputMode && <input type="hidden" name={name} value={data?.value} />
-      }
-    </>
-  );
-}
+import SelectedItem from './SelectedItem';
 
 export default function index({
   name,
@@ -207,6 +170,7 @@ export default function index({
         </div>
       </div>
 
+      {/* Select Collapsable Container */}
       <div
         className={classNames(
           'bg-white divide-y overflow-hidden rounded-b-lg absolute top-full left-0 w-full transition-opacity duration-300 ease-in-out',
@@ -216,36 +180,7 @@ export default function index({
           },
         )}
       >
-        <div
-          className={classNames('overflow-y-auto h-full divide-y', {
-            'max-h-0': !isOpen,
-            'max-h-56': isOpen,
-          })}
-        >
-          {items
-            && items.map((option) => {
-              const isSelected = checkExistenceInArray(selectedItems, option);
-              if (isSelected) {
-                return null;
-              }
-              return (
-                <Row
-                  key={option.value}
-                  data={option}
-                  onClick={(item) => selectItem(item)}
-                />
-              );
-            })}
-          {selectedItems && selectedItems.length >= items.length && (
-            <Row
-              data={{
-                label: 'No hay más opciones disponibles',
-              }}
-              disabled
-            />
-          )}
-        </div>
-
+        {/* Selected Items */}
         {selectedItems && selectedItems.length > 0 && (
           <div className="p-4 flex flex-col gap-2 select-none cursor-default">
             <p className="text-xs">Seleccionados</p>
@@ -262,6 +197,38 @@ export default function index({
             </div>
           </div>
         )}
+
+        <div
+          className={classNames('overflow-y-auto h-full divide-y', {
+            'max-h-0': !isOpen,
+            'max-h-56': isOpen,
+          })}
+        >
+          {/* Items Available to Select */}
+          {items && items.map((option) => {
+            const isSelected = checkExistenceInArray(selectedItems, option);
+            if (isSelected) {
+              return null;
+            }
+            return (
+              <Row
+                key={option.value}
+                data={option}
+                onClick={(item) => selectItem(item)}
+              />
+            );
+          })}
+
+          {/* Empty State */}
+          {selectedItems && selectedItems.length >= items.length && (
+            <Row
+              data={{
+                label: 'No hay más opciones disponibles',
+              }}
+              disabled
+            />
+          )}
+        </div>
       </div>
     </div>
   );
